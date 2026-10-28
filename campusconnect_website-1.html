@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CampusConnect | College Events</title>
+<style>
+:root{--blue:#2457d6;--navy:#14213d;--light:#f4f7ff;--muted:#6b7280;--line:#e5eaf5}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--light);color:var(--navy)}
+.layout{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+aside{background:#fff;border-right:1px solid var(--line);padding:26px 18px}
+.brand{font-size:22px;font-weight:800;color:var(--blue);margin:4px 10px 34px}
+.nav a{display:block;text-decoration:none;color:#596579;padding:13px 14px;border-radius:10px;margin:5px 0;font-weight:600}
+.nav a.active,.nav a:hover{background:#eaf0ff;color:var(--blue)}
+main{padding:28px 34px;max-width:1400px;width:100%;margin:auto}
+.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}
+.search{width:min(360px,55%);padding:12px 15px;border:1px solid var(--line);border-radius:10px;background:white}
+.profile{font-weight:700;white-space:nowrap}.avatar{display:inline-grid;place-items:center;background:#dce7ff;color:var(--blue);width:36px;height:36px;border-radius:50%;margin-right:8px}
+.hero{background:linear-gradient(115deg,#2457d6,#6489f3);border-radius:20px;color:white;padding:30px;display:flex;justify-content:space-between;align-items:center;gap:20px;overflow:hidden}
+.hero h1{font-size:clamp(25px,4vw,36px);margin:0 0 12px}.hero p{margin:0 0 22px;max-width:520px;line-height:1.6;color:#edf2ff}
+button,.btn{border:0;border-radius:9px;background:var(--blue);color:white;padding:11px 16px;font-weight:700;cursor:pointer}.hero button{background:white;color:var(--blue)}button:hover{filter:brightness(.95)}
+.hero-art{font-size:74px;opacity:.95;padding:10px 25px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:23px 0 30px}
+.stat,.event{background:white;border:1px solid var(--line);border-radius:15px;padding:19px}
+.stat small{color:var(--muted);font-weight:600}.stat strong{display:block;font-size:28px;margin-top:10px}
+.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.section-head h2{margin:0;font-size:22px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}.filter{background:white;color:#526078;border:1px solid var(--line);padding:8px 12px;border-radius:20px}.filter.active{background:#eaf0ff;color:var(--blue);border-color:#cbd8ff}
+.events{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.event-top{height:105px;border-radius:11px;display:grid;place-items:center;font-size:38px;margin-bottom:15px}
+.purple{background:#f0eaff}.orange{background:#fff0df}.green{background:#e3f8ed}
+.tag{font-size:11px;letter-spacing:.04em;text-transform:uppercase;font-weight:800;color:var(--blue)}
+.event h3{margin:9px 0;font-size:18px}.event p{color:var(--muted);font-size:14px;line-height:1.5}
+.meta{font-size:13px;color:#596579;margin:14px 0 16px}.event button{width:100%}
+.notice{color:var(--muted);font-size:12px;margin-top:24px}
+@media(max-width:900px){.layout{grid-template-columns:1fr}aside{padding:14px 18px;border-right:0;border-bottom:1px solid var(--line)}.brand{margin:5px 8px 12px}.nav{display:flex;overflow:auto}.nav a{white-space:nowrap;margin:0 3px}.events{grid-template-columns:repeat(2,minmax(0,1fr))}main{padding:22px 18px}}
+@media(max-width:600px){.top{align-items:flex-start;flex-direction:column}.search{width:100%}.stats{grid-template-columns:1fr}.events{grid-template-columns:1fr}.hero-art{display:none}.hero{padding:24px}}
+</style>
+</head>
+<body>
+<div class="layout">
+<aside>
+  <div class="brand">✦ CampusConnect</div>
+  <nav class="nav">
+    <a class="active" href="#dashboard">▦ &nbsp; Dashboard</a>
+    <a href="#events">◷ &nbsp; Browse Events</a>
+    <a href="#registrations" onclick="showRegistrations(event)">✓ &nbsp; My Registrations</a>
+    <a href="#certificates" onclick="showCertificates(event)">♧ &nbsp; Certificates</a>
+  </nav>
+</aside>
+<main id="dashboard">
+  <div class="top">
+    <input id="search" class="search" type="search" placeholder="Search events..." aria-label="Search events">
+    <div class="profile"><span class="avatar">S</span>Student Portal</div>
+  </div>
+  <section class="hero">
+    <div><h1>Your Campus, Connected.</h1><p>Discover workshops, competitions, and campus events. Register in a few clicks and keep your achievements in one place.</p><button onclick="document.querySelector('#events').scrollIntoView({behavior:'smooth'})">Explore Events →</button></div>
+    <div class="hero-art" aria-hidden="true">🎓</div>
+  </section>
+  <section class="stats" aria-label="Your activity">
+    <div class="stat"><small>Registered Events</small><strong id="registeredCount">0</strong></div>
+    <div class="stat"><small>Certificates Earned</small><strong id="certificateCount">0</strong></div>
+    <div class="stat"><small>Upcoming Events</small><strong>3</strong></div>
+  </section>
+  <section id="events">
+    <div class="section-head"><h2 id="eventHeading">Featured Events</h2><div class="filters"><button class="filter active" data-filter="All">All</button><button class="filter" data-filter="Technology">Technology</button><button class="filter" data-filter="Workshop">Workshop</button></div></div>
+    <div class="events" id="eventList">
+      <article class="event" data-category="Technology" data-name="Tech Symposium">
+        <div class="event-top purple">💡</div><span class="tag">Technology</span><h3>Tech Symposium 2026</h3><p>Share ideas, meet innovators, and explore emerging technologies.</p><div class="meta">📅 Nov 12, 2026 &nbsp; · &nbsp; 📍 Main Auditorium</div><button onclick="registerEvent('Tech Symposium 2026',this)">Register Now</button>
+      </article>
+      <article class="event" data-category="Workshop" data-name="Web Design Workshop">
+        <div class="event-top orange">💻</div><span class="tag">Workshop</span><h3>Web Design Workshop</h3><p>Build responsive pages and learn practical UI design skills.</p><div class="meta">📅 Nov 18, 2026 &nbsp; · &nbsp; 📍 Computer Lab</div><button onclick="registerEvent('Web Design Workshop',this)">Register Now</button>
+      </article>
+      <article class="event" data-category="Technology" data-name="Coding Challenge">
+        <div class="event-top green">⌨️</div><span class="tag">Technology</span><h3>Campus Coding Challenge</h3><p>Solve programming problems and test your logical thinking.</p><div class="meta">📅 Nov 24, 2026 &nbsp; · &nbsp; 📍 Lab Block B</div><button onclick="registerEvent('Campus Coding Challenge',this)">Register Now</button>
+      </article>
+    </div>
+    <p class="notice">College mini-project demo. Registrations are stored only in this browser session; a real multi-user portal needs a backend and database.</p>
+  </section>
+</main>
+</div>
+<script>
+const registrations = new Set();
+const certificates = new Set();
+function updateStats(){
+ document.getElementById('registeredCount').textContent=registrations.size;
+ document.getElementById('certificateCount').textContent=certificates.size;
+}
+function registerEvent(name,button){
+ if(registrations.has(name)){alert('You are already registered for '+name+'.');return;}
+ registrations.add(name);button.textContent='Registered ✓';button.style.background='#168653';updateStats();
+ alert('Registration successful for '+name+'!');
+}
+document.querySelectorAll('.filter').forEach(btn=>btn.addEventListener('click',()=>{
+ document.querySelectorAll('.filter').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+ const category=btn.dataset.filter;
+ document.querySelectorAll('.event').forEach(card=>card.style.display=(category==='All'||card.dataset.category===category)?'block':'none');
+ document.getElementById('eventHeading').textContent=category==='All'?'Featured Events':category+' Events';
+}));
+document.getElementById('search').addEventListener('input',e=>{
+ const q=e.target.value.toLowerCase();
+ document.querySelectorAll('.event').forEach(card=>card.style.display=card.dataset.name.toLowerCase().includes(q)||card.dataset.category.toLowerCase().includes(q)?'block':'none');
+});
+function showRegistrations(e){e.preventDefault();alert(registrations.size? 'Your registrations:\\n• '+[...registrations].join('\\n• '):'You have not registered for any events yet.');}
+function showCertificates(e){e.preventDefault();alert(certificates.size?'Your certificates:\\n• '+[...certificates].join('\\n• '):'No certificates yet. Certificates can be added when event completion is implemented.');}
+</script>
+</body>
+</html>
